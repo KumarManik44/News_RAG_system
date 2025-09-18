@@ -18,7 +18,13 @@ class Settings:
         'reuters': 'https://feeds.reuters.com/reuters/topNews',
         'techcrunch': 'https://techcrunch.com/feed/'
     }
-    
+
+    # LLM Settings
+    OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', None)
+    DEFAULT_LLM_MODEL = 'gpt-3.5-turbo'
+    LLM_TEMPERATURE = 0.1
+    MAX_RESPONSE_TOKENS = 800
+
     # Processing settings
     DEFAULT_LANGUAGE = 'en'
     DEFAULT_PAGE_SIZE = 10
