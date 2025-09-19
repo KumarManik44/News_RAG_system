@@ -124,19 +124,19 @@ print(f"Sources: {response.sources}")
 
 ## 📊 Project Structure
 
-news-rag-system/
-├── 📁 api/ # FastAPI backend
-├── 📁 config/ # Configuration management
-├── 📁 data_ingestion/ # News scraping and storage
-├── 📁 embeddings/ # Vector generation
-├── 📁 llm_integration/ # RAG and LLM components
-├── 📁 monitoring/ # MLOps monitoring
-├── 📁 text_processing/ # NLP pipeline
-├── 📁 ui/ # Streamlit interface
-├── 📁 vector_db/ # FAISS database
-├── 📁 tests/ # Test scripts
-├── 📁 deploy/ # Production deployment
-└── 📄 requirements.txt # Dependencies
+News_RAG_system/
+├── 📁 api                        # FastAPI backend
+├── 📁 config                     # Configuration management
+├── 📁 data_ingestion             # News scraping and storage
+├── 📁 embeddings                 # Vector generation
+├── 📁 llm_integration            # RAG and LLM components
+├── 📁 monitoring                 # MLOps monitoring
+├── 📁 text_processing            # NLP pipeline
+├── 📁 ui                         # Streamlit interface
+├── 📁 vector_db                  # FAISS database
+├── 📁 tests                      # Test scripts
+├── 📁 deploy                     # Production deployment
+└── 📄 requirements.txt           # Dependencies
 
 
 ## 🛠️ Technology Stack
