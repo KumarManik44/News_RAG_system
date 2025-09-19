@@ -12,6 +12,96 @@ from typing import List, Optional, Dict
 import logging
 from datetime import datetime
 import asyncio
+from monitoring.system_monitor import NewsRAGMonitor, MonitoringService
+import time
+
+# Initialize monitoring
+monitor = NewsRAGMonitor()
+monitoring_service = MonitoringService(monitor, interval_seconds=300)  # 5 minutes
+
+# Add monitoring endpoints
+@app.get("/monitoring/health", tags=["Monitoring"])
+async def get_system_health():
+    """Get comprehensive system health metrics"""
+    try:
+        dashboard_data = monitor.get_monitoring_dashboard_data()
+        return dashboard_data
+    except Exception as e:
+        logger.error(f"Error getting health metrics: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to get health metrics")
+
+@app.get("/monitoring/metrics", tags=["Monitoring"])
+async def get_performance_metrics():
+    """Get detailed performance metrics"""
+    try:
+        system_metrics = monitor.collect_system_metrics()
+        return {
+            "timestamp": system_metrics.timestamp,
+            "cpu_usage": system_metrics.cpu_usage,
+            "memory_usage": system_metrics.memory_usage,
+            "api_performance": {
+                "avg_response_time_ms": system_metrics.api_response_time,
+                "total_queries": system_metrics.total_queries,
+                "success_rate": system_metrics.successful_queries / max(system_metrics.total_queries, 1)
+            },
+            "data_quality": monitor.evaluate_data_quality()
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Failed to get metrics")
+
+# Enhanced query endpoint with monitoring
+@app.post("/query", response_model=RAGResponse, tags=["RAG"])
+async def query_news(request: QueryRequest):
+    """Answer questions with monitoring"""
+    start_time = time.time()
+    
+    try:
+        response = news_summarizer.answer_news_question(request.question)
+        processing_time = (time.time() - start_time) * 1000
+        
+        # Log successful query
+        monitor.log_query(
+            query=request.question,
+            response_time_ms=processing_time,
+            confidence_score=response.confidence_score,
+            retrieved_docs=len(response.retrieved_documents),
+            status="success"
+        )
+        
+        return RAGResponse(
+            answer=response.answer,
+            sources=response.sources,
+            confidence_score=response.confidence_score,
+            retrieved_documents=len(response.retrieved_documents),
+            processing_time_ms=processing_time
+        )
+        
+    except Exception as e:
+        processing_time = (time.time() - start_time) * 1000
+        
+        # Log failed query
+        monitor.log_query(
+            query=request.question,
+            response_time_ms=processing_time,
+            confidence_score=0.0,
+            retrieved_docs=0,
+            status="error",
+            error_message=str(e)
+        )
+        
+        logger.error(f"Error in query endpoint: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Query processing failed: {str(e)}")
+
+# Start monitoring service on startup
+@app.on_event("startup")
+async def startup_event():
+    monitoring_service.start()
+    logger.info("API started with monitoring enabled")
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    monitoring_service.stop()
+    logger.info("API shutdown, monitoring stopped")
 
 # Now import your modules
 try:
