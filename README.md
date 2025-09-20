@@ -23,6 +23,7 @@ This project implements a complete end-to-end RAG system that continuously inges
 
 ## 🏗️ Architecture
 
+```
 📁 News RAG System
 ├── 📥 Data Ingestion → NewsAPI + RSS feeds
 ├── 🔤 Text Processing → Cleaning + Chunking + Language Detection
@@ -32,7 +33,7 @@ This project implements a complete end-to-end RAG system that continuously inges
 ├── 🌐 API Layer → FastAPI with comprehensive endpoints
 ├── 🖥️ User Interface → Streamlit Dashboard
 └── 📊 Monitoring → MLOps metrics and system health
-
+```
 
 ## 🚀 Quick Start
 
@@ -123,7 +124,7 @@ print(f"Sources: {response.sources}")
 - **Scalability**: Handles concurrent requests with FastAPI async support
 
 ## 📊 Project Structure
-
+```
 News_RAG_system/
 ├── 📁 api                        # FastAPI backend
 ├── 📁 config                     # Configuration management
@@ -137,7 +138,7 @@ News_RAG_system/
 ├── 📁 tests                      # Test scripts
 ├── 📁 deploy                     # Production deployment
 └── 📄 requirements.txt           # Dependencies
-
+```
 
 ## 🛠️ Technology Stack
 
